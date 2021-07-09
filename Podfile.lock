@@ -1,0 +1,38 @@
+PODS:
+  - Alamofire (5.4.3)
+  - Kanna (5.2.4)
+  - Realm (10.8.1):
+    - Realm/Headers (= 10.8.1)
+  - Realm/Headers (10.8.1)
+  - RealmSwift (10.8.1):
+    - Realm (= 10.8.1)
+  - SideMenu (6.5.0)
+  - SwipeCellKit (2.7.1)
+
+DEPENDENCIES:
+  - Alamofire
+  - Kanna
+  - RealmSwift
+  - SideMenu
+  - SwipeCellKit
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Kanna
+    - Realm
+    - RealmSwift
+    - SideMenu
+    - SwipeCellKit
+
+SPEC CHECKSUMS:
+  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
+  Kanna: b9d00d7c11428308c7f95e1f1f84b8205f567a8f
+  Realm: a2db54d9dcceddeba936b429f5b3d6610a109686
+  RealmSwift: 2a3c75ecbf5a3b04080ff5f6f0554cf6337b4764
+  SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
+  SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
+
+PODFILE CHECKSUM: 26f6800bd8f1eaf7478a3c224cb43a3511455173
+
+COCOAPODS: 1.10.1

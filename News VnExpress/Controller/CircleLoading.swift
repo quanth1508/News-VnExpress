@@ -37,7 +37,7 @@ class CircleLoading: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // if startAngle equal endAngle circle do not work draw, so set offset very small this is 0.00001 for endAngle
+        // if startAngle equal endAngle circle do not work draw, so set offset very small this is 0.00001 for startAngle
         let circlePath = UIBezierPath(arcCenter: CGPoint(x: frame.size.width / 2.0, y: frame.size.height / 2.0),
                                       radius: (frame.size.width - 10)/2,
                                       startAngle: CGFloat((0 - (Double.pi / 2) + 0.00001)),

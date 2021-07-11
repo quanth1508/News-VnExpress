@@ -2,7 +2,7 @@
 //  BookMarkViewController.swift
 //  News VnExpress
 //
-//  Created by Quan Tran on 08/07/2021.
+//  Created by Quan Tran on 09/07/2021.
 //
 
 import UIKit
@@ -19,9 +19,9 @@ class BookMarkViewController: UIViewController {
     
     var newBookmark: Results<BookmarkModel>?
     
-    var newsTableCell: NewsTableViewCell?
-    
     var bookMarkCell: BookMarkTableViewCell?
+    
+    let realmServices = RealmServices()
     
     //MARK: - Override Methods
 
@@ -32,9 +32,10 @@ class BookMarkViewController: UIViewController {
         
         tableViewBookMark.dataSource = self
         tableViewBookMark.delegate = self
+
+        bookMarkCell?.bookmarkViewController = self
         
-        newsTableCell?.bookMarkViewController = self
-        bookMarkCell?.bookmarkVC = self
+        realmServices.bookmarkViewController = self
         
         tableViewBookMark.register(UINib(nibName: Contants.Identifier.cellBookmarkNibName, bundle: nil), forCellReuseIdentifier: Contants.Identifier.cellBookmarkIdentifier)
         
@@ -64,20 +65,35 @@ class BookMarkViewController: UIViewController {
     //MARK: - Functions
     
     @IBAction func didTapDeleteAll(_ sender: UIBarButtonItem) {
-        do {
-            try Contants.realm.write({
-                Contants.realm.deleteAll()
-                print("deleded all")
-            })
-        }
-        catch {
-            print("error remove all: \(error.localizedDescription)")
-        }
-        DispatchQueue.main.async { [weak self] in
-            self?.tableViewBookMark.reloadData()
+        
+        // Set up Alert when user click Delete All two case: Exist bookmark or Not bookmark in realm database
+        if newBookmark?.count != 0 {
+            
+            let alert = UIAlertController(title: "Delete \"All News Bookmark\"?", message: "Delete all News Bookmark will remove all Bookmark data you saved.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+                
+                // Delete all data in realm
+                self.realmServices.deleteAllData()
+
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+            
+        } else {
+            
+            let alert = UIAlertController(title: "Don't Delete All News Bookmark!", message: "No News Bookmark saved.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            present(alert, animated: true, completion: nil)
+            
         }
     }
     
+    // Fetch Data to Bookmark tableview from realm database
     private func loadBookmark() {
         newBookmark = Contants.realm.objects(BookmarkModel.self)
         print("count bookmark saved = \(newBookmark?.count ?? 1)")
@@ -103,7 +119,8 @@ extension BookMarkViewController: UITableViewDataSource {
         let newItem = newBookmark?[indexPath.row]
         cell.item = newItem
         
-        // swipe cell kit delegate
+        cell.bookmarkViewController = self
+        // Swipe cell kit delegate
         cell.delegate = self
         
         cell.selectionStyle = .none
@@ -127,6 +144,8 @@ extension BookMarkViewController: UITableViewDelegate {
 //MARK: - SwipeCell Delegate
 
 extension BookMarkViewController: SwipeTableViewCellDelegate {
+    
+    // Set up Swipe cell do Delete
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
 
         guard orientation == .right else { return nil }
@@ -134,26 +153,17 @@ extension BookMarkViewController: SwipeTableViewCellDelegate {
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { [weak self] action, indexPath in
                 
                 if let bookMarkItem = self?.newBookmark?[indexPath.row] {
-                    do {
-                        try Contants.realm.write({
-                            Contants.realm.delete(bookMarkItem)
-                        })
-                    }
-                    catch {
-                        print("error delete \(error.localizedDescription)")
-                    }
-                    
-                    DispatchQueue.main.async { [weak self] in
-                        self?.tableViewBookMark.reloadData()
-                    }
+                    let bookmarkItemResult = Contants.realm.objects(BookmarkModel.self).filter("title = %@", bookMarkItem.title)
+                    self?.realmServices.deleteData(deleteObj: bookmarkItemResult)
                 }
             }
         
-            // customize the action appearance
+            // Customize the action appearance
             deleteAction.image = UIImage(named: "Trush")
             return [deleteAction]
     }
-
+    
+    // Set up options for Swipe Cell
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
         var options = SwipeOptions()
         

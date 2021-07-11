@@ -16,10 +16,9 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var contentNews: UILabel!
     @IBOutlet weak var pubDateNews: UILabel!
     @IBOutlet weak var bookMarkButton: UIButton!
+    @IBOutlet weak var shareNews: UIButton!
     
     @IBOutlet weak var imageNews: CustomImageView!
-    
-    weak var bookMarkViewController: BookMarkViewController?
     
     var bookmarkTapAction: ((Bool) -> Void)?
     
@@ -28,6 +27,10 @@ class NewsTableViewCell: UITableViewCell {
             refesh()
         }
     }
+    
+    let realmServirce = RealmServices()
+    
+    weak var mainViewController: MainViewController?
     
     //MARK: - Override Methods
 
@@ -41,6 +44,7 @@ class NewsTableViewCell: UITableViewCell {
         titleNews.contentMode = .scaleAspectFill
         
         bookMarkButton.addTarget(self, action: #selector(didTapBookmark(_:)), for: .touchUpInside)
+        shareNews.addTarget(self, action: #selector(didTapShare(_:)), for: .touchUpInside)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -49,57 +53,88 @@ class NewsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-//    override func prepareForReuse() {
-//        super.prepareForReuse()
-//
-//        bookMarkButton.imageView?.image = UIImage(systemName: "bookmark")
-//    }
-    
     //MARK: - Funtions
     
+/*
+     Logic when user click bookmark when user at main view controller now,                  (1)
+     or user click bookmark at bookmark view controller then back to main view controller,  (2)
+     or user click bookmark when get start appication                                       (3)
+     
+     All of the above cases are handled here - @objc func didTapBookmark(_:)
+*/
     @objc func didTapBookmark(_ sender: UIButton) {
-    
-        let newItemBookmark  = BookmarkModel.toBookmarkModel(fromModel: item!)
         
-        // bookmark diseleced
-        if sender.isSelected {
-            let results = Contants.realm.objects(BookmarkModel.self).filter("title = %@", newItemBookmark.title)
-            
-            sender.isSelected = false
-            bookmarkTapAction?(false)
-            
-            bookMarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
-            // delete bookmark
-            do {
-                try Contants.realm.write {
-                    Contants.realm.delete(results)
-                    DispatchQueue.main.async { [weak self] in
-                        self?.bookMarkViewController?.tableViewBookMark.reloadData()
-                    }
-                    print("deleted data")
-                }
-            }
-            catch {
-                print("error delete data: \(error.localizedDescription)")
-            }
-        
-        // bookmark selected
-        } else {
-            sender.isSelected = true
-            bookmarkTapAction?(true)
-            
-            bookMarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
-
-            // save or update bookmark to in database
-            try! Contants.realm.write {
-                Contants.realm.add(newItemBookmark, update: .modified)
-                DispatchQueue.main.async { [weak self] in
-                    self?.bookMarkViewController?.tableViewBookMark.reloadData()
-                }
-                print("saved data")
-            }
+        guard let item = item else {
+            return
         }
         
+        // Convert from News Model to News Model Realm
+        let newItemBookmark  = BookmarkModel.toBookmarkModel(fromModel: item)
+       
+        if sender.isSelected {
+            
+            let results = Contants.realm.objects(BookmarkModel.self).filter("title = %@", item.title)
+            
+            // User click bookmark normal   (1)
+            if results.count != 0 {
+                sender.isSelected = false
+                bookmarkTapAction?(false)
+                bookMarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+                
+                realmServirce.deleteData(deleteObj: results)
+            } else {
+                // User click bookmark at bookmark view controller then back to main view controller    (2)
+                sender.isSelected = true
+                bookmarkTapAction?(true)
+                bookMarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                
+                realmServirce.saveData(saveObj: newItemBookmark)
+            }
+            
+        // Bookmark is click the first time
+        } else {
+            
+            let results = Contants.realm.objects(BookmarkModel.self).filter("title = %@", item.title)
+            
+            // User click bookmark when get start appication    (3)
+            if results.count != 0 {
+                sender.isSelected = false
+                bookmarkTapAction?(false)
+                bookMarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+
+                realmServirce.deleteData(deleteObj: results)
+            } else {
+                // User click bookmark normal   (1)
+                sender.isSelected = true
+                bookmarkTapAction?(true)
+                bookMarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+                
+                // save or update bookmark to in database
+                realmServirce.saveData(saveObj: newItemBookmark)
+            }
+            
+        }
+        
+    }
+    
+    @objc func didTapShare(_ sender: UIButton) {
+        guard let item = item else {
+            return
+        }
+        
+        let message = item.title
+        // creating share sheet
+        if let link = NSURL(string: item.link) {
+            let objectsToShare = [message,link] as [Any]
+            
+            let activityViewController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            activityViewController.excludedActivityTypes = [UIActivity.ActivityType.message, UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.postToFacebook]
+            
+            // present share sheet on an iPad
+            activityViewController.popoverPresentationController?.sourceView = sender
+            activityViewController.popoverPresentationController?.sourceRect = sender.frame
+            mainViewController?.present(activityViewController, animated: true, completion: nil)
+        }
     }
     
     // to refesh update UI

@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -35,7 +34,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="9KE-l9-bnj">
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="9KE-l9-bnj">
                                         <rect key="frame" x="0.0" y="118" width="257" height="20"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PublishAt" translatesAutoresizingMaskIntoConstraints="NO" id="BYV-cb-km4">
@@ -46,22 +45,27 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="pubLishAt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7sL-Vw-fNp">
-                                                <rect key="frame" x="25" y="0.0" width="207" height="20"/>
+                                                <rect key="frame" x="26" y="0.0" width="179" height="20"/>
                                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="13"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kn9-uL-GhO">
-                                                <rect key="frame" x="237" y="0.0" width="20" height="20"/>
+                                                <rect key="frame" x="211" y="0.0" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="JP3-Ae-yux"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="bookmark" catalog="system"/>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qGF-iT-Z0I">
+                                                <rect key="frame" x="237" y="0.0" width="20" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="20" id="ezV-oZ-Kzg"/>
+                                                    <constraint firstAttribute="height" constant="20" id="lkg-sI-8Bj"/>
+                                                </constraints>
+                                                <state key="normal" title="Button" image="arrowshape.turn.up.right" catalog="system"/>
+                                            </button>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="kn9-uL-GhO" secondAttribute="trailing" id="3QQ-lZ-E6c"/>
-                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -103,6 +107,7 @@
                 <outlet property="contentNews" destination="aG4-Jq-Cue" id="KMu-BJ-mph"/>
                 <outlet property="imageNews" destination="Ttd-xq-iZ2" id="jlR-3x-1xk"/>
                 <outlet property="pubDateNews" destination="7sL-Vw-fNp" id="oQa-uQ-rHb"/>
+                <outlet property="shareNews" destination="qGF-iT-Z0I" id="Wj6-tq-dh0"/>
                 <outlet property="titleNews" destination="heD-iV-w69" id="cox-b0-f8Q"/>
             </connections>
             <point key="canvasLocation" x="277.536231884058" y="79.6875"/>
@@ -110,6 +115,7 @@
     </objects>
     <resources>
         <image name="PublishAt" width="267" height="267"/>
+        <image name="arrowshape.turn.up.right" catalog="system" width="128" height="106"/>
         <image name="bookmark" catalog="system" width="112" height="128"/>
         <image name="line.diagonal.arrow" catalog="system" width="128" height="113"/>
     </resources>

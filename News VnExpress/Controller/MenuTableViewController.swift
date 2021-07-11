@@ -9,7 +9,7 @@ import UIKit
 
 //MARK: - Protocols
 
-protocol SideMenuDelegate: class {
+protocol SideMenuDelegate: AnyObject {
     func didTapSideMenuItem(item: FScreen)
 }
 

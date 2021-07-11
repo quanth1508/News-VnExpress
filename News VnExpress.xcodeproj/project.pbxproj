@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6F1A304C269351DF00857BA4 /* FScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1A304B269351DF00857BA4 /* FScreen.swift */; };
+		6F27F768269AAE0000938945 /* RealmServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F27F767269AAE0000938945 /* RealmServices.swift */; };
 		6F2FF42D269575B8003FA8CE /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2FF42C269575B8003FA8CE /* LaunchViewController.swift */; };
 		6F633B78269769A900F73D89 /* BookMarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F633B77269769A900F73D89 /* BookMarkViewController.swift */; };
 		6F633B7F26976B8600F73D89 /* BookMarkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F633B7D26976B8600F73D89 /* BookMarkTableViewCell.swift */; };
@@ -36,6 +37,7 @@
 /* Begin PBXFileReference section */
 		1CD4C5B8B63C2865EA2C54D8 /* Pods-News VnExpress.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News VnExpress.release.xcconfig"; path = "Target Support Files/Pods-News VnExpress/Pods-News VnExpress.release.xcconfig"; sourceTree = "<group>"; };
 		6F1A304B269351DF00857BA4 /* FScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FScreen.swift; sourceTree = "<group>"; };
+		6F27F767269AAE0000938945 /* RealmServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmServices.swift; sourceTree = "<group>"; };
 		6F2FF42C269575B8003FA8CE /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		6F633B77269769A900F73D89 /* BookMarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkViewController.swift; sourceTree = "<group>"; };
 		6F633B7D26976B8600F73D89 /* BookMarkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookMarkTableViewCell.swift; sourceTree = "<group>"; };
@@ -125,13 +127,13 @@
 			isa = PBXGroup;
 			children = (
 				6FFAB9C826906D1200DDD674 /* Utility */,
-				6F7AC111268F0A1100C205D2 /* ViewModel */,
 				6F7AC10F268F09FE00C205D2 /* Model */,
-				6F7AC10D268F09EA00C205D2 /* Resource */,
-				6F7AC10E268F09F300C205D2 /* Controller */,
 				6F7AC110268F0A0800C205D2 /* View */,
-				6F7AC107268F09DC00C205D2 /* Info.plist */,
+				6F7AC111268F0A1100C205D2 /* ViewModel */,
+				6F7AC10E268F09F300C205D2 /* Controller */,
+				6F7AC10D268F09EA00C205D2 /* Resource */,
 				6FC931E82696A36D00FC56DB /* FileSupport */,
+				6F7AC107268F09DC00C205D2 /* Info.plist */,
 			);
 			path = "News VnExpress";
 			sourceTree = "<group>";
@@ -170,10 +172,10 @@
 		6F7AC110268F0A0800C205D2 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6F633B7C26976B5C00F73D89 /* CellBookMark */,
-				6FFAB9C32690673500DDD674 /* CellMenu */,
-				6F1A304D26937FC100857BA4 /* Storyboard */,
 				6FFAB9DB2690B10600DDD674 /* NewsCell */,
+				6FFAB9C32690673500DDD674 /* CellMenu */,
+				6F633B7C26976B5C00F73D89 /* CellBookMark */,
+				6F1A304D26937FC100857BA4 /* Storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -209,6 +211,7 @@
 				6FFAB9C926906D2900DDD674 /* Contants.swift */,
 				6FFAB9DC2690B30400DDD674 /* CustomImageView.swift */,
 				6FFAB9DE2690B38F00DDD674 /* Extension.swift */,
+				6F27F767269AAE0000938945 /* RealmServices.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				6F633B78269769A900F73D89 /* BookMarkViewController.swift in Sources */,
 				6FFAB9D92690B10100DDD674 /* NewsTableViewCell.swift in Sources */,
 				6F633B7F26976B8600F73D89 /* BookMarkTableViewCell.swift in Sources */,
+				6F27F768269AAE0000938945 /* RealmServices.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

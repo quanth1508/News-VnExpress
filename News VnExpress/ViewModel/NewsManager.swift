@@ -100,7 +100,8 @@ class NewsManager: NSObject, XMLParserDelegate {
             if let doc  = try? HTML(html: imgString!, encoding: .utf8) {
                 descriptionString = doc.text!
             }
-//            let descriptionString = descriptionString(imgString)
+            
+//            let descriptionString = firstDescriptionString(imgString)
             currentDescriptionString = descriptionString
         }
     }
@@ -151,4 +152,6 @@ class NewsManager: NSObject, XMLParserDelegate {
         }
         return nil
     }
+  
+    // Use regex find description with: "(?:</br>)([^]]*)(?:]*)"
 }

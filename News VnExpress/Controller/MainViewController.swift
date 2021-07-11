@@ -19,13 +19,16 @@ class MainViewController: UIViewController {
     @IBOutlet weak var circleLoading: CircleLoading!
     
     var menu: SideMenuNavigationController?
-
+    
     var newsManager = NewsManager()
     
     var items: [NewsModel]?
     
     let menuSide = MenuTableViewController()
     
+    var categories = FScreen.allCases
+    
+    // RefreshControl
     private lazy var refresh: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = .clear
@@ -39,8 +42,10 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Trang chủ"
         circleLoading.isHidden = true
         
+        // Set up sidemenu to MainViewController
         menu = SideMenuNavigationController(rootViewController: menuSide)
         
         menu!.alwaysAnimate = true
@@ -49,29 +54,27 @@ class MainViewController: UIViewController {
         
         SideMenuManager.default.leftMenuNavigationController = menu
         SideMenuManager.default.addPanGestureToPresent(toView: view)
-        
-        tableViewNews.dataSource = self
-        tableViewNews.delegate = self
-//        newsManager.mainViewController = self
         self.menuSide.delegate = self
         
+        // Set up table view news
+        tableViewNews.dataSource = self
+        tableViewNews.delegate = self
+        
         tableViewNews.register(UINib(nibName: Contants.Identifier.cellNewsNibName, bundle: nil), forCellReuseIdentifier: Contants.Identifier.cellNewsIdentifier)
-    
+        
         tableViewNews.estimatedRowHeight = 140
         tableViewNews.rowHeight = UITableView.automaticDimension
         
         tableViewNews.backgroundView = self.refresh
         
-        fetch(fromURl: "https://vnexpress.net/rss/tin-moi-nhat.rss")
+        fetchSideMenu(fromURl: "https://vnexpress.net/rss/tin-moi-nhat.rss")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        title = "Trang chủ"
-        
         navigationController?.navigationBar.prefersLargeTitles = true
-    
+        
         navigationController?.navigationItem.largeTitleDisplayMode = .automatic
         
         navigationController?.navigationBar.titleTextAttributes =
@@ -80,6 +83,10 @@ class MainViewController: UIViewController {
         
         navigationController?.navigationBar.tintColor = UIColor(named: Contants.Color.textBarColor)
         navigationController?.navigationBar.barTintColor = UIColor(named: Contants.Color.barColor)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.tableViewNews.reloadData()
+        }
     }
     
     //MARK: - IB Action
@@ -98,13 +105,13 @@ class MainViewController: UIViewController {
     
     //MARK: - Functions
     
+    // Function use for refresh control tableview news
     @objc func refreshSelf(_ sender: UIRefreshControl) {
         tableViewNews.alpha = 0.5
         self.view.isUserInteractionEnabled = false
         
-        DispatchQueue.main.async { [weak self] in
-            self?.tableViewNews.reloadData()
-        }
+        let currentTitle = findCaseTitle(categories: categories, titleString: title!)
+        fetchDataRefresh(item: currentTitle)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             self?.refresh.endRefreshing()
@@ -113,6 +120,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    // Function use for animate circle refresh
     @objc func stopRefreshing() {
         tableViewNews.isHidden = false
         circleLoading.isHidden = true
@@ -126,21 +134,82 @@ class MainViewController: UIViewController {
         group.enter()
         self.circleLoading.animateCircle(duration: 1.5)
         group.leave()
+
+        guard let titleString = self.title else {
+            return
+        }
+        
+        let currentTitle = findCaseTitle(categories: self.categories, titleString: titleString)
+        fetchDataRefresh(item: currentTitle)
         
         group.notify(queue: .main) { [weak self] in
-            self?.tableViewNews.reloadData()
             Timer.scheduledTimer(timeInterval: 1.5, target: self!, selector: #selector(self?.stopRefreshing), userInfo: nil, repeats: false)
         }
     }
     
     // Fetch Data from url
-    private func fetch(fromURl url: String) {
+    private func fetchSideMenu(fromURl url: String) {
         newsManager.fetchData(from: url) { [weak self] (item) in
             self?.items = item
             DispatchQueue.main.async {
                 self?.tableViewNews.reloadData()
             }
         }
+    }
+    
+    func fetchDataRefresh(item: FScreen) {
+        switch item {
+        case .trangchu:
+            fetchSideMenu(fromURl: UrlFscreen.trangchu.rawValue)
+        case .thegioi:
+            fetchSideMenu(fromURl: UrlFscreen.thegioi.rawValue)
+        case .thoisu:
+            fetchSideMenu(fromURl: UrlFscreen.thoisu.rawValue)
+        case .kinhdoanh:
+            fetchSideMenu(fromURl: UrlFscreen.kinhdoanh.rawValue)
+        case .startup:
+            fetchSideMenu(fromURl: UrlFscreen.startup.rawValue)
+        case .giaitri:
+            fetchSideMenu(fromURl: UrlFscreen.giaitri.rawValue)
+        case .thethao:
+            fetchSideMenu(fromURl: UrlFscreen.thethao.rawValue)
+        case .phapluat:
+            fetchSideMenu(fromURl: UrlFscreen.phapluat.rawValue)
+        case .giaoduc:
+            fetchSideMenu(fromURl: UrlFscreen.giaoduc.rawValue)
+        case .tinnoibat:
+            fetchSideMenu(fromURl: UrlFscreen.tinnoibat.rawValue)
+        case .suckhoe:
+            fetchSideMenu(fromURl: UrlFscreen.suckhoe.rawValue)
+        case .doisong:
+            fetchSideMenu(fromURl: UrlFscreen.doisong.rawValue)
+        case .dulich:
+            fetchSideMenu(fromURl: UrlFscreen.dulich.rawValue)
+        case .khoahoc:
+            fetchSideMenu(fromURl: UrlFscreen.khoahoc.rawValue)
+        case .sohoa:
+            fetchSideMenu(fromURl: UrlFscreen.sohoa.rawValue)
+        case .xe:
+            fetchSideMenu(fromURl: UrlFscreen.xe.rawValue)
+        case .ykien:
+            fetchSideMenu(fromURl: UrlFscreen.ykien.rawValue)
+        case .tamsu:
+            fetchSideMenu(fromURl: UrlFscreen.tamsu.rawValue)
+        case .cuoi:
+            fetchSideMenu(fromURl: UrlFscreen.cuoi.rawValue)
+        case .tinxemnhieu:
+            fetchSideMenu(fromURl: UrlFscreen.tinxemnhieu.rawValue)
+        }
+    }
+    
+    func findCaseTitle(categories: [FScreen], titleString: String) -> FScreen {
+        for index in categories.indices {
+            if categories[index].rawValue == titleString {
+                print("current categories: \(categories[index].rawValue)")
+                return categories[index]
+            }
+        }
+        return categories[0]
     }
 }
 
@@ -159,34 +228,48 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Contants.Identifier.cellNewsIdentifier, for: indexPath) as! NewsTableViewCell
         
-        let items = items?[indexPath.row]
-        cell.item = items
-        
-        if items?.bookmarkTaped == true {
-            cell.bookMarkButton.imageView?.image = UIImage(systemName: "bookmark.fill")
-        } else {
-            cell.bookMarkButton.imageView?.image = UIImage(systemName: "bookmark")
+        guard var items = items?[indexPath.row]  else {
+            return cell
         }
         
+        cell.item = items
+        
+        cell.mainViewController = self
+        
+        let result = Contants.realm.objects(BookmarkModel.self).filter("title = %@", items.title)
+        
+        // check news exist in realm database
+        if result.count != 0 {
+            cell.bookMarkButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+        } else {
+            cell.bookMarkButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        }
+        
+        items.bookmarkTaped = (result.count != 0) ? true : false
+        
+        cell.bookMarkButton.imageView?.image = (items.bookmarkTaped) ? UIImage(systemName: "bookmark.fill") : UIImage(systemName: "bookmark")
+        
+        // call back state bookmark news
         cell.bookmarkTapAction = { (isTapped) in
             self.items?[indexPath.row].bookmarkTaped = isTapped
         }
         
         cell.selectionStyle = .none
+        
         return cell
     }
     
+    // Animation cell will appear display
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-
         let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 0, 50, 0)
         cell.layer.transform = rotationTransform
         cell.alpha = 0
-
+        
         UIView.animate(withDuration: 0.2,
                        delay: 0.01,
                        options: .curveEaseInOut,
                        animations: {
-                            cell.layer.transform = CATransform3DIdentity
+                        cell.layer.transform = CATransform3DIdentity
                         cell.alpha = 1 },
                        completion: nil)
     }
@@ -214,49 +297,8 @@ extension MainViewController: SideMenuDelegate {
     
     func didTapSideMenuItem(item: FScreen) {
         title = item.rawValue
-        
-        switch item {
-        case .trangchu:
-            fetch(fromURl: UrlFscreen.trangchu.rawValue)
-        case .thegioi:
-            fetch(fromURl: UrlFscreen.thegioi.rawValue)
-        case .thoisu:
-            fetch(fromURl: UrlFscreen.thoisu.rawValue)
-        case .kinhdoanh:
-            fetch(fromURl: UrlFscreen.kinhdoanh.rawValue)
-        case .startup:
-            fetch(fromURl: UrlFscreen.startup.rawValue)
-        case .giaitri:
-            fetch(fromURl: UrlFscreen.giaitri.rawValue)
-        case .thethao:
-            fetch(fromURl: UrlFscreen.thethao.rawValue)
-        case .phapluat:
-            fetch(fromURl: UrlFscreen.phapluat.rawValue)
-        case .giaoduc:
-            fetch(fromURl: UrlFscreen.giaoduc.rawValue)
-        case .tinnoibat:
-            fetch(fromURl: UrlFscreen.tinnoibat.rawValue)
-        case .suckhoe:
-            fetch(fromURl: UrlFscreen.suckhoe.rawValue)
-        case .doisong:
-            fetch(fromURl: UrlFscreen.doisong.rawValue)
-        case .dulich:
-            fetch(fromURl: UrlFscreen.dulich.rawValue)
-        case .khoahoc:
-            fetch(fromURl: UrlFscreen.khoahoc.rawValue)
-        case .sohoa:
-            fetch(fromURl: UrlFscreen.sohoa.rawValue)
-        case .xe:
-            fetch(fromURl: UrlFscreen.xe.rawValue)
-        case .ykien:
-            fetch(fromURl: UrlFscreen.ykien.rawValue)
-        case .tamsu:
-            fetch(fromURl: UrlFscreen.tamsu.rawValue)
-        case .cuoi:
-            fetch(fromURl: UrlFscreen.cuoi.rawValue)
-        case .tinxemnhieu:
-            fetch(fromURl: UrlFscreen.tinxemnhieu.rawValue)
-        }
+        self.fetchDataRefresh(item: item)
+
         self.menu?.dismiss(animated: true, completion: nil)
     }
     

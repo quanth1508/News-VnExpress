@@ -15,10 +15,11 @@ class BookMarkTableViewCell: SwipeTableViewCell {
     @IBOutlet weak var titleNews: UILabel!
     @IBOutlet weak var contentNews: UILabel!
     @IBOutlet weak var pubDateNews: UILabel!
+    @IBOutlet weak var shareNews: UIButton!
     
     @IBOutlet weak var imageNews: CustomImageView!
     
-    weak var bookmarkVC: BookMarkViewController?
+    weak var bookmarkViewController: BookMarkViewController?
     
     var item: BookmarkModel? {
         didSet {
@@ -37,6 +38,7 @@ class BookMarkTableViewCell: SwipeTableViewCell {
         
         titleNews.textColor = UIColor(named: Contants.Color.titleColor)
         titleNews.contentMode = .scaleAspectFill
+        shareNews.addTarget(self, action: #selector(didTapShare(_:)), for: .touchUpInside)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -46,6 +48,26 @@ class BookMarkTableViewCell: SwipeTableViewCell {
     }
     
     //MARK: - Functions
+    
+    @objc func didTapShare(_ sender: UIButton) {
+        guard let item = item else {
+            return
+        }
+        
+        let message = item.title
+        // creating share sheet
+        if let link = NSURL(string: item.link) {
+            let objectsToShare = [message,link] as [Any]
+            
+            let activityViewController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            activityViewController.excludedActivityTypes = [UIActivity.ActivityType.message, UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.postToFacebook]
+            
+            // present share sheet on an iPad
+            activityViewController.popoverPresentationController?.sourceView = sender
+            activityViewController.popoverPresentationController?.sourceRect = sender.frame
+            bookmarkViewController?.present(activityViewController, animated: true, completion: nil)
+        }
+    }
     
     // refesh Update UI
     func refesh() {

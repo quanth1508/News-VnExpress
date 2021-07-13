@@ -8,6 +8,7 @@
 import UIKit
 import SideMenu
 import SafariServices
+import UserNotifications
 
 class MainViewController: UIViewController {
     
@@ -68,6 +69,28 @@ class MainViewController: UIViewController {
         tableViewNews.backgroundView = self.refresh
         
         fetchSideMenu(fromURl: "https://vnexpress.net/rss/tin-moi-nhat.rss")
+        
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { grented, error in
+            
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Hey, i'm notification"
+        content.body = "Look at me!"
+        
+        let date = Date().addingTimeInterval(6)
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let uuidString = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+        
+        center.add(request) { error in
+            
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -279,7 +302,6 @@ extension MainViewController: UITableViewDataSource {
 //MARK: - Extension Table View Delegate
 
 extension MainViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = newsManager.news[indexPath.row]
         let urlString = item.link
@@ -288,18 +310,15 @@ extension MainViewController: UITableViewDelegate {
             present(vc, animated: true, completion: nil)
         }
     }
-    
 }
 
 //MARK: - Extension Side Menu Delegate
 
 extension MainViewController: SideMenuDelegate {
-    
     func didTapSideMenuItem(item: FScreen) {
         title = item.rawValue
         self.fetchDataRefresh(item: item)
 
         self.menu?.dismiss(animated: true, completion: nil)
     }
-    
 }

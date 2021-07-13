@@ -6,9 +6,9 @@
 //
 
 import UIKit
-import SwipeCellKit
+//import SwipeCellKit
 
-class BookMarkTableViewCell: SwipeTableViewCell {
+class BookMarkTableViewCell: UITableViewCell {
     
     //MARK: - Properties
     
@@ -70,7 +70,7 @@ class BookMarkTableViewCell: SwipeTableViewCell {
     }
     
     // refesh Update UI
-    func refesh() {
+    private func refesh() {
         DispatchQueue.main.async { [weak self] in
             self?.titleNews.text = self?.item?.title
             self?.contentNews.text = self?.item?.descriptionString

@@ -56,9 +56,9 @@ class NewsTableViewCell: UITableViewCell {
     //MARK: - Funtions
     
 /*
-     Logic when user click bookmark when user at main view controller now,                  (1)
-     or user click bookmark at bookmark view controller then back to main view controller,  (2)
-     or user click bookmark when get start appication                                       (3)
+     Logic application when user click bookmark when user at main view controller now,          (1)
+     or user click bookmark at bookmark view controller then back to main view controller,      (2)
+     or user click bookmark when get start appication                                           (3)
      
      All of the above cases are handled here - @objc func didTapBookmark(_:)
 */

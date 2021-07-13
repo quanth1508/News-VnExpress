@@ -7,13 +7,11 @@
 
 import Foundation
 import Alamofire
-import Kanna
+//import Kanna
 
 class NewsManager: NSObject, XMLParserDelegate {
     
     //MARK: - Properties
-    
-    weak var mainViewController: MainViewController?
     
     var news = [NewsModel]()
     
@@ -96,13 +94,13 @@ class NewsManager: NSObject, XMLParserDelegate {
             let imgSrc = firstImgUrlString(imgString)
             currentImgSrc = imgSrc ?? ""
             
-            var descriptionString = ""
-            if let doc  = try? HTML(html: imgString!, encoding: .utf8) {
-                descriptionString = doc.text!
-            }
+//            var descriptionString = ""
+//            if let doc  = try? HTML(html: imgString!, encoding: .utf8) {
+//                descriptionString = doc.text!
+//            }
             
-//            let descriptionString = firstDescriptionString(imgString)
-            currentDescriptionString = descriptionString
+            let descriptionString = firstDescriptionString(imgString)
+            currentDescriptionString = descriptionString ?? ""
         }
     }
     
@@ -152,6 +150,26 @@ class NewsManager: NSObject, XMLParserDelegate {
         }
         return nil
     }
-  
+    
     // Use regex find description with: "(?:</br>)([^]]*)(?:]*)"
+    func firstDescriptionString(_ string: String?) -> String? {
+        var regex: NSRegularExpression? = nil
+        do {
+            regex = try NSRegularExpression(
+                pattern: "(?:</br>)([^]]*)(?:]*)",
+                options: .caseInsensitive)
+        } catch let error {
+            print("invalid regex = \(error.localizedDescription)")
+        }
+
+        let result = regex?.firstMatch (
+            in: string ?? "",
+            options: [],
+            range: NSRange(location: 0, length: string?.count ?? 0))
+
+        if let result = result {
+            return (string as NSString?)?.substring(with: result.range(at: 1))
+        }
+        return nil
+    }
 }

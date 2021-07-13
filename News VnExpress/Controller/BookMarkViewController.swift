@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 import SafariServices
-import SwipeCellKit
+//import SwipeCellKit
 
 class BookMarkViewController: UIViewController {
     
@@ -113,19 +113,30 @@ extension BookMarkViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableViewBookMark.dequeueReusableCell(withIdentifier: Contants.Identifier.cellBookmarkIdentifier,
                                                          for: indexPath) as! BookMarkTableViewCell
         let newItem = newBookmark?[indexPath.row]
         cell.item = newItem
         
         cell.bookmarkViewController = self
+        
         // Swipe cell kit delegate
-        cell.delegate = self
+//        cell.delegate = self
         
         cell.selectionStyle = .none
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+            let del = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (context, view, completion) in
+                if let bookMarkItem = self?.newBookmark?[indexPath.row] {
+                    let bookmarkItemResult = Contants.realm.objects(BookmarkModel.self).filter("title = %@", bookMarkItem.title)
+                    self?.realmServices.deleteData(deleteObj: bookmarkItemResult)
+                }
+            }
+            return UISwipeActionsConfiguration(actions:[del])
+        }
+    
 }
 
 //MARK: - TableView Book Mark Delegate
@@ -135,14 +146,15 @@ extension BookMarkViewController: UITableViewDelegate {
         let item = newBookmark?[indexPath.row]
         
         if let urlLink = URL(string: item?.link ?? "") {
-            let safariVc = SFSafariViewController(url: urlLink)
-            present(safariVc, animated: true, completion: nil)
+            let safariVC = SFSafariViewController(url: urlLink)
+            present(safariVC, animated: true, completion: nil)
         }
     }
 }
 
 //MARK: - SwipeCell Delegate
 
+/*
 extension BookMarkViewController: SwipeTableViewCellDelegate {
     
     // Set up Swipe cell do Delete
@@ -172,3 +184,4 @@ extension BookMarkViewController: SwipeTableViewCellDelegate {
         return options
     }
 }
+ */

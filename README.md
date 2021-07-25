@@ -7,8 +7,6 @@ An iOS News app that uses parsed XML data from [VnExpress](https://vnexpress.net
 * SideMenu
 * Alamofire
 * RealmSwift
-* SwipeCellKit
-* Kanna
 
 # Installation
 
@@ -22,7 +20,7 @@ An iOS News app that uses parsed XML data from [VnExpress](https://vnexpress.net
 # Screenshots
 
 <br/><a href="url"><img src="https://user-images.githubusercontent.com/64849551/125187029-b2849e80-e257-11eb-9eb8-8bcd53e175d4.gif" align="left" height="610" width="310" ></a>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 # Contributing
 
